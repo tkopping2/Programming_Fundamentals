@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Medieval Battle Game</title>
+<style>
+  h1 {
+    color: darkred;
+  }
+  body  {
+    background-image: url('https://wappenwiki.org/images/3/34/Edmund_Plantagenet_Flag.svg');
+    background-size: auto;
+    background-repeat: no-repeat;
+    background-position: center center;
+        height: 100vh; 
+        display: flex;
+        justify-content: center;
+        align-items: center;
+  }
+  #game-container{
+    background-color: rgba(0, 0, 0, 0.9);
+    padding: 20px;
+    border-radius: 10px;
+  }
+  #game-text{
+    color: white;
+  }
+  input[type="text"]{
+    color: black;
+  }
+</style>
+</head>
+<body>
+  <div id="game-container">
+    <h1 style="color: yellow;"><strong>Battle of Agincourt Text Adventure Game</strong></h1>
+    <div id="game-text"></div>
+    <div id="input-container">
+      <input type="text" id="user-input" placeholder="Enter your name, my liege!" />
+      <button id="submit-button">Click</button>
+    </div>
+  </div>
+  <script>
+    //Declare constant variables
+    //These are getting referenced to the HTML elements with the matching id
+    const gameText = document.getElementById("game-text");
+    const userInput = document.getElementById("user-input");
+    const submitButton = document.getElementById("submit-button");
+
+    //Declare variable
+    let playerName = "";
+    
+    //Create an array for list of commands
+    const commands = [
+      "muster forces",
+      "advance to agincourt",
+      "check supplies",
+      "send scouts",
+      "position men",
+      "negotiate",
+      "attack",
+      "let arrows loose",
+    ];
+
+    let hasMusteredForces = false;
+    let hasPositionedMen = false;
+
+    //Create function to add text to games display area
+    function displayGameText(text) {
+      //Create new element to create paragraph that will display text
+      const newTextElement = document.createElement("p");
+      //This will set the text inside the paragraph
+      newTextElement.innerHTML = text;
+      //This will add the new paragraph text to the end of the content inside the gameText element
+      gameText.appendChild(newTextElement);
+      //Ensure the latest text is shown
+      gameText.scrollTop = gameText.scrollHeight;
+    }
+
+    //Add event listener and reference to user-input id
+    submitButton.addEventListener("click", () => {
+      const command = userInput.value;
+      userInput.value = "";
+
+      //Declare variable
+      let responseText = "";
+
+      //Create if statement
+      if (playerName === "") {
+        playerName = command;
+        //Lists the array for the user to see the list of commands to select from
+        const commandList = commands.join(", ");
+        //Display the initial message, the player name, and the list of commands
+        displayGameText(`<strong>The King's Decree:</strong><br><em>"Men of the realm, the French army approaches! We must gather our forces and defend our lands. Your courage and strategy will be tested in the coming battle. I am ${playerName}, your king."</em><br><br>Enter your command, King ${playerName}!</span><br><br><span class="command-list">Available commands: ${commandList}</span>`);
+        userInput.placeholder = "Enter command!";
+      } else {
+        //Create switch statement and convert all user input to lowercase
+        switch (command.toLowerCase()) {
+          case "muster forces":
+            responseText = `<strong>You order the muster of troops!</strong><br>The banners of England are raised, soldiers from across the country gather to your cause.  The army is 5000 strong and ready for battle!`;
+            hasMusteredForces = true;
+            break;
+          case "advance to agincourt":
+            responseText = `<strong>The army advances to Agincourt!</strong><br>You lead your forces towards the French army. Scouts report a force of 20000 French knights and men-at-arms.`;
+            break;
+          case "check supplies":
+            responseText = `<strong>You check the supplies.</strong><br>Your quartermasters report that you have enough food and water for ten days, and your blacksmiths have plenty of arrows and weapons.`;
+            break;
+          case "send scouts":
+            responseText = `<strong>You send scouts ahead.</strong><br> The scouts return with valuable information about the enemy's position and strength.`;
+            break;
+          case "position men":
+            responseText = `<strong>You position your men.</strong><br> Your archers are placed on the flanks, and your knights are held in reserve.`;
+            hasPositionedMen = true;
+            break;
+          case "negotiate":
+            responseText = `<strong>You attempt to negotiate with</strong> <strong style="color: royalblue;">Constable Charles d'Albret of France...</strong><br> but your terms are met with arrogance and a declaration of battle.`;
+            break;
+          case "attack":
+            if (!hasMusteredForces || !hasPositionedMen) {
+              responseText = `<strong style="color: crimson;">You order the attack, but disaster strikes!</strong><br><em>Your forces are disorganized and ill-prepared. The French knights overwhelm your lines, and you are defeated.</em>`;
+            } else {
+              responseText = `<strong style="color: green;">You order the attack!</strong><br><em>The English longbowmen unleash a barrage of arrows, and the French knights charge.  The battle is fierce, but your men hold the line.  Victory is yours, King ${playerName}!</em>`;
+            }
+            break;
+          case "let arrows loose":
+            responseText = "<strong>You order: \"Let arrows loose!\"</strong><br> A volley of arrows flies towards the enemy, causing chaos in their ranks.";
+            break;
+          default:
+            responseText = `<strong style="color: crimson;">Invalid command!</strong><br> Your advisors await your command, my liege.  Try: 'muster forces', 'advance to Agincourt', 'check supplies', 'send scouts', 'position men', 'negotiate', 'attack', or 'let arrows loose'.`;
+        }
+        //Call function
+        displayGameText(responseText);
+      }
+    });
+  </script>
+</body>
+</html>
